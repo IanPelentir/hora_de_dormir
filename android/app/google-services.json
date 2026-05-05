@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "399826298242",
+    "project_id": "hora-de-dormir-app",
+    "storage_bucket": "hora-de-dormir-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399826298242:android:ba6db92d6ecd554ef21b9b",
+        "android_client_info": {
+          "package_name": "com.example.sleep_tracker"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdT35XtFB3Ka5zFFHXU67v_hv5lxl-WT8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
