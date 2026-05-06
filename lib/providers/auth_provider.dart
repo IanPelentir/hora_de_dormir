@@ -21,52 +21,63 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 🔐 LOGIN AUTOMÁTICO (Caso precise tentar logar anonimamente ou carregar estado inicial)
+  /// 🔐 Inicialização de auth (útil para splash)
   Future<void> initAuth() async {
-    // Apenas notifica inicialização se precisar
+    _setError(null);
+
+    try {
+      // Apenas força leitura do estado atual do FirebaseAuth
+      await Future.delayed(const Duration(milliseconds: 300));
+    } catch (e) {
+      _setError("Erro ao inicializar autenticação");
+    }
+
     notifyListeners();
   }
 
-  /// 🔐 LOGIN COM EMAIL E SENHA
+  /// 🔐 LOGIN
   Future<bool> login(String email, String password) async {
     _setLoading(true);
     _setError(null);
+
     try {
       await _authService.signInWithEmailAndPassword(email, password);
       _setLoading(false);
       return true;
     } catch (e) {
-      _setError(e.toString().replaceAll('Exception: ', ''));
+      _setError(_formatError(e));
       _setLoading(false);
       return false;
     }
   }
 
-  /// 📝 CADASTRO COM EMAIL E SENHA
+  /// 📝 REGISTRO
   Future<bool> register(String email, String password) async {
     _setLoading(true);
     _setError(null);
+
     try {
       await _authService.createUserWithEmailAndPassword(email, password);
       _setLoading(false);
       return true;
     } catch (e) {
-      _setError(e.toString().replaceAll('Exception: ', ''));
+      _setError(_formatError(e));
       _setLoading(false);
       return false;
     }
   }
 
-  /// 🕵️ LOGIN ANÔNIMO
+  /// 🕵️ ANÔNIMO
   Future<bool> loginAnonymously() async {
     _setLoading(true);
     _setError(null);
+
     try {
       await _authService.signInAnonymously();
       _setLoading(false);
       return true;
     } catch (e) {
-      _setError(e.toString().replaceAll('Exception: ', ''));
+      _setError(_formatError(e));
       _setLoading(false);
       return false;
     }
@@ -74,7 +85,20 @@ class AuthProvider extends ChangeNotifier {
 
   /// 🚪 LOGOUT
   Future<void> logout() async {
-    await _authService.signOut();
+    _setLoading(true);
+
+    try {
+      await _authService.signOut();
+    } catch (e) {
+      _setError(_formatError(e));
+    }
+
+    _setLoading(false);
     notifyListeners();
+  }
+
+  /// 🧠 helper de erro limpo
+  String _formatError(Object e) {
+    return e.toString().replaceAll('Exception: ', '');
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import '../providers/sleep_provider.dart';
 import 'auth_view.dart';
 import 'sleep_view.dart';
 
@@ -17,25 +16,14 @@ class _SplashViewState extends State<SplashView> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    Future.delayed(const Duration(seconds: 2), () {
       _init();
     });
   }
 
   Future<void> _init() async {
     final auth = context.read<AuthProvider>();
-    final sleepProvider = context.read<SleepProvider>();
-
     await auth.initAuth();
-    
-    if (auth.isLoggedIn) {
-      // Se estiver logado, tenta carregar o histórico
-      try {
-        await sleepProvider.loadHistory();
-      } catch (e) {
-        debugPrint('Erro ao carregar histórico: $e');
-      }
-    }
 
     if (!mounted) return;
 
@@ -54,9 +42,28 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.indigo,
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(
+              Icons.nightlight_round,
+              size: 90,
+              color: Colors.white,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Sleep Tracker",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
