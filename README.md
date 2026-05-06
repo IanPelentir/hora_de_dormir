@@ -1,52 +1,46 @@
-# Sleep Tracker App 🌙
+# Sleep Tracker - Empresa Fictícia
 
-A production-ready Flutter application designed to track user sleep sessions with a strong focus on LGPD compliance, secure authentication, and a clean Model-View-Controller (MVC) architecture.
+Uma aplicação Flutter pronta para produção, projetada para monitorar sessões de sono com foco rigoroso na conformidade com a **LGPD**, autenticação segura e uma arquitetura limpa **Model-View-Controller (MVC)**.
 
-## 🎯 Problem Solved
-People need a simple, reliable way to record their sleep patterns. However, privacy is a major concern. This app solves the problem by providing an intuitive interface to start and end sleep sessions while explicitly complying with the General Data Protection Law (LGPD), ensuring users know exactly how their data is used and stored.
+## 🎯 Problema Resolvido
+As pessoas precisam de uma maneira simples e confiável de registrar seus padrões de sono. No entanto, a privacidade é uma preocupação central. Este aplicativo fornece uma interface intuitiva para iniciar e terminar sessões de sono, cumprindo explicitamente a **Lei Geral de Proteção de Dados (LGPD)**, garantindo que os usuários saibam exatamente como seus dados são usados e armazenados.
 
-## 👥 Target Audience
-Individuals who want to monitor their sleep duration and history in a secure environment without their data being shared or sold.
+## 👥 Público-Alvo
+Indivíduos que desejam monitorar a duração e o histórico de seu sono em um ambiente seguro, sem que seus dados sejam compartilhados ou vendidos.
 
-## 🏗️ Architecture (MVC)
-The project is built using the **Model-View-Controller (MVC)** architectural pattern, strictly separating logic, state, and UI.
+## 🏗️ Arquitetura (MVC)
+[cite_start]O projeto foi construído utilizando o padrão arquitetural **Model-View-Controller (MVC)**, conforme os requisitos da disciplina, separando rigidamente a lógica, o estado e a interface do usuário (UI)[cite: 75, 77, 83].
 
-- **Models (`lib/models/`)**: Defines data structures (e.g., `SleepModel` with `toMap` and `fromMap` serialization).
-- **Views (`lib/views/`)**: Pure UI components built with Flutter. They react to state changes using `Provider`.
-- **Controllers (`lib/controllers/`)**: Handles the business logic (e.g., `SleepController` calculating durations and interacting with services).
-- **Providers (`lib/providers/`)**: Manages the application state (e.g., `SleepProvider`, `AuthProvider`), bridging Controllers and Views.
-- **Services (`lib/services/`)**: Handles external integrations like Firebase.
+- [cite_start]**Models (`lib/models/`)**: Define as estruturas de dados (ex: `SleepModel` com serialização `toMap` e `fromMap`)[cite: 84].
+- **Views (`lib/views/`)**: Componentes de interface puros construídos com Flutter. [cite_start]Eles reagem às mudanças de estado usando o `Provider`[cite: 84].
+- [cite_start]**Controllers (`lib/controllers/`)**: Gerenciam a lógica de negócio, como o cálculo de durações de sono baseadas na idade[cite: 84, 126].
+- [cite_start]**Providers (`lib/providers/`)**: Gerenciam o estado da aplicação, servindo de ponte entre Controllers e Views[cite: 33, 112].
+- [cite_start]**Services (`lib/services/`)**: Gerenciam integrações externas e a persistência de dados[cite: 84, 127].
 
 ## ☁️ Backend (Firebase)
-- **Authentication**: Firebase Auth handles user sign-in securely.
-- **Database**: Cloud Firestore is used to persist `sleep_records`. Each document is securely tied to a `userId`.
+[cite_start]A aplicação realiza operações reais de comunicação com dados persistentes através do ecossistema Firebase[cite: 89, 99]:
+- [cite_start]**Autenticação**: O Firebase Auth gerencia o acesso do usuário de forma segura[cite: 103].
+- [cite_start]**Banco de Dados**: O Cloud Firestore é utilizado para persistir os registros de sono (`sleep_records`), vinculando cada documento ao `userId` do proprietário[cite: 106].
 
-## 🧠 State Management (Provider)
-We use the `provider` package. `MultiProvider` at the root of the app injects `AuthProvider` and `SleepProvider`. Views use `context.watch()` to listen to state changes dynamically without manual `setState` calls.
+## 🧠 Gerenciamento de Estados (Provider)
+[cite_start]Utilizamos o pacote **Provider**, conforme trabalhado em sala de aula[cite: 112]. [cite_start]O `MultiProvider` na raiz do app injeta as dependências necessárias, e as Views utilizam `context.watch()` para ouvir mudanças de estado dinamicamente[cite: 165].
 
-## ⚖️ LGPD Compliance
-Before accessing the app, users are forced to read and agree to the Terms of Use and Privacy Policy (`TermsView`).
-- **Data transparency**: Explains that only email, sleep start/end, and duration are collected.
-- **Data protection**: Explicitly states no data selling or third-party sharing.
-- **Consent persistence**: `SharedPreferences` saves the consent locally.
+## ⚖️ Conformidade com a LGPD
+Antes de acessar o app, os usuários devem ler e concordar com os Termos de Uso e a Política de Privacidade.
+- **Transparência**: Explicação clara de quais dados (e-mail e horários de sono) são coletados.
+- **Proteção**: Garantia de não comercialização de dados.
+- **Persistência**: O consentimento é salvo localmente para respeitar a escolha do usuário.
 
-## 🎬 UI & Animations
-Rive animations (`.riv`) are integrated for modern, smooth UX:
-- Loading states
-- Empty history states
-- Dynamic sleeping/awake states (`sleep.riv` / `awake.riv`)
+## 🤖 Uso de IA (Antigravity)
+[cite_start]Conforme as diretrizes da atividade, o **Antigravity com IA** foi utilizado como ferramenta de apoio técnico para[cite: 18, 120, 139]:
+- [cite_start]Estruturação inicial da arquitetura de pastas e separação de responsabilidades[cite: 122].
+- [cite_start]Refatoração da lógica de cálculo de horas para tratar casos de "virada de dia"[cite: 131].
+- [cite_start]Criação dos métodos de serialização nos modelos de dados[cite: 125].
+- [cite_start]Auxílio na configuração e integração dos serviços do Cloud Firestore[cite: 129].
 
-## 🚀 How to Run
-
-1. Clone the repository.
-2. Install dependencies:
+## 🚀 Como Executar o Projeto
+1. Clone o repositório.
+2. Certifique-se de ter o Flutter instalado e configurado.
+3. Instale as dependências:
    ```bash
    flutter pub get
-   ```
-3. **Important - Firebase Configuration**: 
-   - Add your `google-services.json` to `android/app/`.
-   - Add your `GoogleService-Info.plist` to `ios/Runner/`.
-4. Run the app:
-   ```bash
-   flutter run
-   ```

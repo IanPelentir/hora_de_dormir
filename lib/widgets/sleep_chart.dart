@@ -12,10 +12,10 @@ class SleepChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// Garante 7 dias
+    /// Garante até 7 dias
     final List<double> data = List.generate(7, (index) {
       if (index < weeklyHistory.length) {
-        return (weeklyHistory[index].duration?.inMinutes ?? 0) / 60.0;
+        return weeklyHistory[index].duration.inMinutes / 60.0;
       }
       return 0.0;
     });
@@ -27,7 +27,7 @@ class SleepChart extends StatelessWidget {
           alignment: BarChartAlignment.spaceAround,
           maxY: 12,
 
-          /// ✅ TOOLTIP (corrigido p/ fl_chart atual)
+          /// TOOLTIP
           barTouchData: BarTouchData(
             enabled: true,
             touchTooltipData: BarTouchTooltipData(
@@ -45,7 +45,7 @@ class SleepChart extends StatelessWidget {
             ),
           ),
 
-          /// ✅ TÍTULOS
+          /// TÍTULOS
           titlesData: FlTitlesData(
             show: true,
 
@@ -56,17 +56,14 @@ class SleepChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   const days = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
-                  final style = const TextStyle(
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 12,
-                  );
-
                   return Padding(
                     padding: const EdgeInsets.only(top: 8),
                     child: Text(
                       days[value.toInt() % 7],
-                      style: style,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
                     ),
                   );
                 },
@@ -98,21 +95,21 @@ class SleepChart extends StatelessWidget {
             ),
           ),
 
-          /// ✅ GRID
+          /// GRID
           gridData: FlGridData(
             show: true,
             drawVerticalLine: false,
             horizontalInterval: 4,
             getDrawingHorizontalLine: (value) => FlLine(
-              color: Colors.white.withOpacity(0.1),
+              color: Colors.white24,
               strokeWidth: 1,
             ),
           ),
 
-          /// ✅ BORDA
+          /// BORDA
           borderData: FlBorderData(show: false),
 
-          /// ✅ LINHA DE META (corrigida)
+          /// LINHA META
           extraLinesData: ExtraLinesData(
             horizontalLines: [
               HorizontalLine(
@@ -135,22 +132,20 @@ class SleepChart extends StatelessWidget {
             ],
           ),
 
-          /// ✅ BARRAS
+          /// BARRAS
           barGroups: List.generate(7, (index) {
             final value = data[index];
 
             final isGoodSleep = value >= 7 && value <= 9;
-
-            final barColor = isGoodSleep
-                ? Colors.indigoAccent
-                : Colors.deepPurple.shade300;
 
             return BarChartGroupData(
               x: index,
               barRods: [
                 BarChartRodData(
                   toY: value,
-                  color: barColor,
+                  color: isGoodSleep
+                      ? Colors.indigoAccent
+                      : Colors.deepPurpleAccent,
                   width: 16,
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(6),
@@ -158,7 +153,7 @@ class SleepChart extends StatelessWidget {
                   backDrawRodData: BackgroundBarChartRodData(
                     show: true,
                     toY: 12,
-                    color: Colors.white.withOpacity(0.05),
+                    color: Colors.white12,
                   ),
                 ),
               ],
@@ -166,7 +161,6 @@ class SleepChart extends StatelessWidget {
           }),
         ),
 
-        /// ✅ ANIMAÇÃO
         swapAnimationDuration: const Duration(milliseconds: 800),
         swapAnimationCurve: Curves.easeInOut,
       ),

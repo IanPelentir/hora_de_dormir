@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../models/sleep_model.dart';
+import '../services/firebase_service.dart';
 
 class SleepProvider extends ChangeNotifier {
+  final FirebaseService _firebaseService = FirebaseService();
+
   bool _isSleeping = false;
   DateTime? _sleepStartTime;
   Duration _currentDuration = Duration.zero;
@@ -13,7 +16,7 @@ class SleepProvider extends ChangeNotifier {
   double _sleepGoal = 8.0;
 
   /// 📊 HISTÓRICO
-  final List<SleepModel> _history = [];
+  List<SleepModel> _history = [];
 
   /// =========================
   /// GETTERS
@@ -38,6 +41,19 @@ class SleepProvider extends ChangeNotifier {
     if (hours <= 0) return; // evita meta inválida
     _sleepGoal = hours;
     notifyListeners();
+  }
+
+  /// =========================
+  /// 📥 CARREGAR HISTÓRICO DO FIREBASE
+  /// =========================
+  Future<void> loadHistory() async {
+    try {
+      final sessions = await _firebaseService.getSleepHistory();
+      _history = sessions;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Erro ao carregar histórico: $e');
+    }
   }
 
   /// =========================
@@ -66,7 +82,7 @@ class SleepProvider extends ChangeNotifier {
   /// =========================
   /// ☀️ FINALIZAR SONO
   /// =========================
-  void endSleep() {
+  Future<void> endSleep() async {
     if (!_isSleeping) return;
 
     _isSleeping = false;
@@ -77,18 +93,24 @@ class SleepProvider extends ChangeNotifier {
       final duration = end.difference(_sleepStartTime!);
 
       if (duration.inMinutes > 0) {
-        _history.add(
-          SleepModel(
-            sleepStart: _sleepStartTime!,
-            sleepEnd: end,
-            duration: duration,
-            createdAt: DateTime.now(),
-          ),
+        final session = SleepModel(
+          sleepStart: _sleepStartTime!,
+          sleepEnd: end,
+          duration: duration,
+          createdAt: DateTime.now(),
         );
 
-        /// mantém só últimos 7 registros
+        _history.insert(0, session); // Add ao início (mais recente primeiro)
+        
+        try {
+          await _firebaseService.saveSleepSession(session);
+        } catch (e) {
+          debugPrint('Erro ao salvar no Firebase: $e');
+        }
+
+        /// mantém só últimos 7 registros localmente (no Firebase fica tudo)
         if (_history.length > 7) {
-          _history.removeAt(0);
+          _history.removeLast();
         }
       }
     }
