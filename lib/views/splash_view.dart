@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'auth_view.dart';
 import 'sleep_view.dart';
+import 'terms_view.dart'; // ✅ Importação necessária para a nova lógica
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -39,21 +40,38 @@ class _SplashViewState extends State<SplashView>
 
     _controller.forward();
 
+    // Aguarda o tempo da animação e então decide para onde ir
     Timer(const Duration(seconds: 3), _goNext);
   }
 
   Future<void> _goNext() async {
+    if (!mounted) return;
+    
     final auth = context.read<AuthProvider>();
-    await auth.initAuth();
+    
+    // O initAuth já foi chamado no construtor do Provider (main.dart),
+    // mas garantimos que o estado foi processado.
+    
+    Widget nextScreen;
+
+    if (auth.isLoggedIn) {
+      // ✅ REGRA DE NEGÓCIO LGPD:
+      // Se está logado, verifica se já aceitou os termos no Firestore
+      if (auth.acceptedTerms) {
+        nextScreen = const SleepView();
+      } else {
+        nextScreen = const TermsView();
+      }
+    } else {
+      // Se não está logado, vai para a tela de autenticação
+      nextScreen = const AuthView();
+    }
 
     if (!mounted) return;
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (_) =>
-            auth.isLoggedIn ? const SleepView() : const AuthView(),
-      ),
+      MaterialPageRoute(builder: (_) => nextScreen),
     );
   }
 
@@ -69,7 +87,6 @@ class _SplashViewState extends State<SplashView>
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            // Tons escuros para remeter à saúde e bem-estar (sono)
             colors: [Color(0xFF0D1117), Color(0xFF1A237E)], 
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
@@ -83,10 +100,9 @@ class _SplashViewState extends State<SplashView>
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Substituição da imagem pelo Ícone solicitado
                   const Icon(
                     Icons.nightlight_round,
-                    color: Color(0xFF5C6BC0), // Cor aproximada da sua captura
+                    color: Color(0xFF5C6BC0),
                     size: 110,
                   ),
                   const SizedBox(height: 20),
