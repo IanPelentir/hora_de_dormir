@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 // 🔥 GERADO PELO FLUTTERFIRE CLI
 import 'firebase_options.dart';
 
-import 'providers/sleep_provider.dart';
-import 'providers/auth_provider.dart'; // ✅ ADICIONADO
+// Importe o arquivo onde a classe SleepProvider está definida
+import 'providers/sleep_provider.dart'; 
+import 'providers/auth_provider.dart';
 import 'views/splash_view.dart';
 
 void main() async {
@@ -31,8 +33,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // lazy: false garante que o login seja verificado IMEDIATAMENTE ao abrir
+        ChangeNotifierProvider(create: (_) => AuthProvider(), lazy: false),
+        
+        // CORREÇÃO: O nome aqui deve ser SleepProvider para coincidir com a View
         ChangeNotifierProvider(create: (_) => SleepProvider()),
-        ChangeNotifierProvider(create: (_) => AuthProvider()), // ✅ AQUI
       ],
       child: const SleepTrackerApp(),
     );
@@ -51,6 +56,13 @@ class SleepTrackerApp extends StatelessWidget {
       title: 'Sleep Tracker',
       debugShowCheckedModeBanner: false,
 
+      // Suporte a PT-BR (Removido o 'const' para evitar erro de inicialização)
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('pt', 'BR')],
       locale: const Locale('pt', 'BR'),
 
       theme: ThemeData(
@@ -60,21 +72,17 @@ class SleepTrackerApp extends StatelessWidget {
         colorScheme: const ColorScheme.dark(
           primary: indigoAccents,
           surface: Color(0xFF1B2A4A),
-          background: deepBlue,
+          onSurface: Colors.white,
         ),
 
-        textTheme: GoogleFonts.nunitoTextTheme().copyWith(
+        textTheme: GoogleFonts.nunitoTextTheme(ThemeData.dark().textTheme).copyWith(
           displayLarge: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w700,
           ),
-          bodyLarge: TextStyle(
-            color: Colors.white.withOpacity(0.9),
+          bodyLarge: const TextStyle(
+            color: Colors.white,
             fontSize: 16,
-          ),
-          bodyMedium: TextStyle(
-            color: Colors.white.withOpacity(0.7),
-            fontSize: 14,
           ),
         ),
 
@@ -82,6 +90,11 @@ class SleepTrackerApp extends StatelessWidget {
           backgroundColor: deepBlue,
           elevation: 0,
           centerTitle: true,
+          titleTextStyle: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
           iconTheme: IconThemeData(color: Colors.white),
         ),
 

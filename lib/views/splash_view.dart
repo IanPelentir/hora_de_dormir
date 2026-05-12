@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../providers/auth_provider.dart';
+import 'auth_view.dart';
 import 'sleep_view.dart';
+import 'terms_view.dart'; // ✅ Importação necessária para a nova lógica
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -10,31 +14,117 @@ class SplashView extends StatefulWidget {
   State<SplashView> createState() => _SplashViewState();
 }
 
-class _SplashViewState extends State<SplashView> {
+class _SplashViewState extends State<SplashView>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fade;
+  late Animation<double> _scale;
+
   @override
   void initState() {
     super.initState();
-    _init();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1800),
+    );
+
+    _fade = CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeIn,
+    );
+
+    _scale = Tween<double>(begin: 0.7, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
+    );
+
+    _controller.forward();
+
+    // Aguarda o tempo da animação e então decide para onde ir
+    Timer(const Duration(seconds: 3), _goNext);
   }
 
-  Future<void> _init() async {
+  Future<void> _goNext() async {
+    if (!mounted) return;
+    
     final auth = context.read<AuthProvider>();
+    
+    // O initAuth já foi chamado no construtor do Provider (main.dart),
+    // mas garantimos que o estado foi processado.
+    
+    Widget nextScreen;
 
-    await auth.initAuth();
+    if (auth.isLoggedIn) {
+      // ✅ REGRA DE NEGÓCIO LGPD:
+      // Se está logado, verifica se já aceitou os termos no Firestore
+      if (auth.acceptedTerms) {
+        nextScreen = const SleepView();
+      } else {
+        nextScreen = const TermsView();
+      }
+    } else {
+      // Se não está logado, vai para a tela de autenticação
+      nextScreen = const AuthView();
+    }
 
     if (!mounted) return;
 
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => const SleepView()),
+      MaterialPageRoute(builder: (_) => nextScreen),
     );
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF0D1117), Color(0xFF1A237E)], 
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _fade,
+            child: ScaleTransition(
+              scale: _scale,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(
+                    Icons.nightlight_round,
+                    color: Color(0xFF5C6BC0),
+                    size: 110,
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Sleep Tracker",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  const CircularProgressIndicator(
+                    color: Colors.white54,
+                    strokeWidth: 2,
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }

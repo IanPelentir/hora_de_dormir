@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     projectId: 'hora-de-dormir-app',
     storageBucket: 'hora-de-dormir-app.firebasestorage.app',
   );
+
 }
