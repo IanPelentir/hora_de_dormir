@@ -38,7 +38,7 @@ Antes de acessar o app, os usuários devem ler e concordar com os Termos de Uso 
 - [cite_start]Criação dos métodos de serialização nos modelos de dados[cite: 125].
 - [cite_start]Auxílio na configuração e integração dos serviços do Cloud Firestore[cite: 129].
 
-## 🚀 Como Executar o Projeto
+### 🚀 Como Executar o Projeto
 1. Clone o repositório.
 2. Certifique-se de ter o Flutter instalado e configurado.
 3. Instale as dependências:
