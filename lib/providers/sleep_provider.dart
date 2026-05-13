@@ -21,6 +21,9 @@ class SleepProvider extends ChangeNotifier {
   /// 📊 HISTÓRICO
   List<SleepModel> _history = [];
 
+  /// ✅ CORREÇÃO: Preserva a duração da última sessão finalizada
+  Duration _lastSessionDuration = Duration.zero;
+
   /// =========================
   /// GETTERS
   /// =========================
@@ -31,6 +34,9 @@ class SleepProvider extends ChangeNotifier {
   double get sleepGoal => _sleepGoal;
   bool get isLoading => _isLoading;
   List<SleepModel> get history => List.unmodifiable(_history);
+
+  /// ✅ Getter para exibir no card "Último sono"
+  Duration get lastSessionDuration => _lastSessionDuration;
 
   /// =========================
   /// 📥 CARREGAR HISTÓRICO
@@ -49,6 +55,11 @@ class SleepProvider extends ChangeNotifier {
     try {
       final sessions = await _firebaseService.getSleepHistory();
       _history = sessions;
+
+      // ✅ CORREÇÃO: Atualiza lastSessionDuration com o registro mais recente
+      if (_history.isNotEmpty) {
+        _lastSessionDuration = _history.first.duration;
+      }
     } catch (e) {
       debugPrint('Erro ao carregar histórico: $e');
     } finally {
@@ -69,7 +80,7 @@ class SleepProvider extends ChangeNotifier {
 
     _timer?.cancel();
     
-    // ✅ CORREÇÃO: Timer alterado para 1 segundo para atualização em tempo real na UI
+    // ✅ Timer de 1 segundo para atualização em tempo real na UI
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (_sleepStartTime != null) {
         _currentDuration = DateTime.now().difference(_sleepStartTime!);
@@ -93,13 +104,16 @@ class SleepProvider extends ChangeNotifier {
       final end = DateTime.now();
       final duration = end.difference(_sleepStartTime!);
 
-      // ✅ CORREÇÃO: Permitir salvar registros com mais de 1 segundo (útil para testes)
+      // ✅ CORREÇÃO: Salva a duração da última sessão ANTES de zerar
+      _lastSessionDuration = duration;
+
+      // Permitir salvar registros com mais de 1 segundo (útil para testes)
       if (duration.inSeconds > 0) {
         final session = SleepModel(
           userId: user.uid,
           sleepStart: _sleepStartTime!,
           sleepEnd: end,
-          duration: duration, // Passa a duration real calculada
+          duration: duration,
           createdAt: DateTime.now(),
         );
 
@@ -113,7 +127,7 @@ class SleepProvider extends ChangeNotifier {
       }
     }
     
-    // Limpa a sessão atual após salvar
+    // Limpa a sessão atual após salvar (mas _lastSessionDuration permanece)
     _sleepStartTime = null;
     _currentDuration = Duration.zero;
     
