@@ -1,0 +1,106 @@
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:12 (find_program)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_UNAME"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "uname"
+    candidate_directories:
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/copilotCli/"
+      - "/home/home/dev/flutter/bin/"
+      - "/app/bin/"
+      - "/usr/bin/"
+      - "/home/home/.var/app/com.visualstudio.code/data/node_modules/bin/"
+      - "/bin/"
+      - "/usr/local/bin/"
+    searched_directories:
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/debugCommand/uname"
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/copilotCli/uname"
+      - "/home/home/dev/flutter/bin/uname"
+      - "/app/bin/uname"
+    found: "/usr/bin/uname"
+    search_context:
+      ENV{PATH}:
+        - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/debugCommand"
+        - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/copilotCli"
+        - "/home/home/dev/flutter/bin/"
+        - "/app/bin"
+        - "/app/bin"
+        - "/app/bin"
+        - "/usr/bin"
+        - "/home/home/.var/app/com.visualstudio.code/data/node_modules/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:212 (message)"
+      - "CMakeLists.txt:3 (project)"
+    message: |
+      The system is: Linux - 7.0.14-201.fc44.x86_64 - x86_64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/usr/share/cmake-4.3/Modules/CMakeNinjaFindMake.cmake:5 (find_program)"
+      - "CMakeLists.txt:3 (project)"
+    mode: "program"
+    variable: "CMAKE_MAKE_PROGRAM"
+    description: "Program used to build from build.ninja files."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ninja-build"
+      - "ninja"
+      - "samu"
+    candidate_directories:
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/debugCommand/"
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/copilotCli/"
+      - "/home/home/dev/flutter/bin/"
+      - "/app/bin/"
+      - "/usr/bin/"
+      - "/home/home/.var/app/com.visualstudio.code/data/node_modules/bin/"
+    searched_directories:
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/debugCommand/ninja-build"
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/debugCommand/ninja"
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/debugCommand/samu"
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/copilotCli/ninja-build"
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/copilotCli/ninja"
+      - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/copilotCli/samu"
+      - "/home/home/dev/flutter/bin/ninja-build"
+      - "/home/home/dev/flutter/bin/ninja"
+      - "/home/home/dev/flutter/bin/samu"
+      - "/app/bin/ninja-build"
+      - "/app/bin/ninja"
+      - "/app/bin/samu"
+      - "/usr/bin/ninja-build"
+    found: "/usr/bin/ninja"
+    search_context:
+      ENV{PATH}:
+        - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/debugCommand"
+        - "/home/home/.var/app/com.visualstudio.code/config/Code/User/globalStorage/github.copilot-chat/copilotCli"
+        - "/home/home/dev/flutter/bin/"
+        - "/app/bin"
+        - "/app/bin"
+        - "/app/bin"
+        - "/usr/bin"
+        - "/home/home/.var/app/com.visualstudio.code/data/node_modules/bin"
+...

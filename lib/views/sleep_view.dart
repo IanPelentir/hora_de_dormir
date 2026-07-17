@@ -4,7 +4,6 @@ import '../providers/sleep_provider.dart';
 import '../controllers/sleep_controller.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/sleep_card.dart';
-import '../widgets/info_tile.dart';
 import '../widgets/sleep_chart.dart';
 import 'history_view.dart';
 
@@ -149,6 +148,7 @@ class SleepView extends StatelessWidget {
                         height: 220,
                         child: SleepChart(
                           weeklyHistory: provider.history,
+                          sleepGoal: provider.sleepGoal,
                         ),
                       ),
                     ],

@@ -48,6 +48,8 @@ dependencies:
   fl_chart: ^1.2.0
   google_fonts: ^8.1.0
   rive: ^0.14.6
+  flutter_localizations:
+    sdk: flutter
 
 
 dev_dependencies:
